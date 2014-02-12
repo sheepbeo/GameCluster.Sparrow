@@ -14,16 +14,20 @@ public class BugPoolManager : MonoBehaviour, IPool {
 
 	// Use this for initialization
 	void Start () {
+		BoxCollider poolBoundCollider = poolBounds.GetComponent<BoxCollider>();
+
+		rangeX = poolBoundCollider.size.x/2;
+		rangeY = poolBoundCollider.size.y/2;
+		rangeZ = poolBoundCollider.size.z/2;
+
 		bugs = new List<Transform>();
 		for (int i = 0; i < PoolSize; i++) {
 			Transform t = (Transform) Instantiate(Prefab, transform.position, Quaternion.identity);
 			Recycle(t);
 		}
 
-		BoxCollider poolBoundCollider = poolBounds.GetComponent<BoxCollider>();
-		rangeX = poolBoundCollider.size.x/2;
-		rangeY = poolBoundCollider.size.y/2;
-		rangeZ = poolBoundCollider.size.z/2;
+
+
 	}
 	
 	// Update is called once per frame
