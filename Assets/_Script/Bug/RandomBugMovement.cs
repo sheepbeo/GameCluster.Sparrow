@@ -18,9 +18,8 @@ public class RandomBugMovement : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		print("random movement");
 		nextTarget = (Transform) Instantiate(Prefab, transform.position, Quaternion.identity);
-		print(Prefab.position);
+		nextTarget.parent = this.transform;
 	}
 	
 	// Update is called once per frame

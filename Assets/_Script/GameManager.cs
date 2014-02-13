@@ -18,6 +18,6 @@ public class GameManager : MonoBehaviour {
 
 	// TODO put this in GUI Manager
 	void OnGUI() {
-		GUI.Label(new Rect(10,10,100,100), "Score: " + birdManager.Score);
+		GUI.Label(new Rect(16,15,100,100), "Score: " + birdManager.Score);
 	}
 }

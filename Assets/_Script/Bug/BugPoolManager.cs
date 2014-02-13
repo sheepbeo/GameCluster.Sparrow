@@ -6,6 +6,7 @@ public class BugPoolManager : MonoBehaviour, IPool {
 	public float PoolSize;
 	public Transform Prefab;
 	public Transform poolBounds;
+	public Transform bugsContainer;
 
 	protected List<Transform> bugs;
 	protected float rangeX;
@@ -23,11 +24,9 @@ public class BugPoolManager : MonoBehaviour, IPool {
 		bugs = new List<Transform>();
 		for (int i = 0; i < PoolSize; i++) {
 			Transform t = (Transform) Instantiate(Prefab, transform.position, Quaternion.identity);
+			t.parent = bugsContainer;
 			Recycle(t);
 		}
-
-
-
 	}
 	
 	// Update is called once per frame
