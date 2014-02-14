@@ -17,7 +17,11 @@ public class BeakSensor : MonoBehaviour {
 	void OnTriggerEnter(Collider other) {
 		if (other.gameObject.CompareTag("Bug")) { // check if sensor hits bug
 			manager.Score++;
-			manager.ReplenishEnergy(10f);
+
+			BugProperties bugProps = other.gameObject.GetComponent<BugProperties>();
+			if (bugProps != null) {
+				manager.ReplenishEnergy(bugProps.energyValue);
+			}
 		}
 	}
 }
