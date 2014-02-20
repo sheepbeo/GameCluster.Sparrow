@@ -7,7 +7,7 @@ public class BirdInput : MonoBehaviour {
 	protected float verInput;
 	protected float horInput;
 	protected float moveInput;
-	protected bool chargeInput;
+	protected float dashInput;
 	
 	// Use this for initialization
 	void Start () {
@@ -20,11 +20,11 @@ public class BirdInput : MonoBehaviour {
 		horInput = Input.GetAxis("Mouse X");
 		moveInput = Input.GetAxis("Vertical");
 
-		chargeInput = Input.GetKeyDown(KeyCode.Space);
+		dashInput = (Input.GetKey(KeyCode.Space)) ? 1.0f : 0.0f;
 		
 		// handle input:
 		manager.MoveView(verInput,horInput);
 		manager.Move(moveInput);
-		if (chargeInput) manager.Charge();
+		manager.Dash(dashInput);
 	}
 }

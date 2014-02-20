@@ -36,8 +36,8 @@ public class BirdManager : MonoBehaviour {
 		movement.Move(moveInput);
 	}
 
-	public void Charge() {
-
+	public void Dash(float dashInput) {
+		movement.Dash(dashInput);
 	}
 
 	public void ReplenishEnergy(float amount) {
