@@ -2,44 +2,42 @@
 using System.Collections;
 
 public class RandomBugMovement : MonoBehaviour {
-
-	public float randomness = 0.1f;
+	
+	public float nextChangeMin = 0.5f;
+	public float nextChangeMax = 2.0f;
 	public float baseSpeed = 1.0f;
-
-	public Transform Prefab;
-
-	public float minAxisDistance = 1.0f;
-	public float maxAxisDistance = 2.0f;
-
-	[SerializeField]
-	private Vector3 velocity = Vector3.zero;
-	[SerializeField]
-	private Transform nextTarget;
+	public float turnAngle = 30f;
+	
+	private Vector3 direction = Vector3.zero;
+	private float timeCounter;
+	private float nextChange;
 
 	// Use this for initialization
 	void Start () {
-		print("random movement");
-		nextTarget = (Transform) Instantiate(Prefab, transform.position, Quaternion.identity);
-		print(Prefab.position);
+		this.direction = new Vector3(Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f));
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		rigidbody.velocity = (nextTarget.position - transform.position) * baseSpeed;
-	}
-
-	void OnTriggerEnter(Collider other) {
-		if (other.gameObject.CompareTag("BugRandomNextTarget")) {
-			RandomizeNextTarget();
+		timeCounter += Time.deltaTime;
+		if (timeCounter > nextChange) {
+			nextChange = Random.Range(nextChangeMin, nextChangeMax);
+			timeCounter = 0;
+			RandomizeDirection();
 		}
 	}
 
-	private void RandomizeNextTarget() {
-		Vector3 nextPos = nextTarget.position;
-		nextPos.x += Random.Range(minAxisDistance, maxAxisDistance) * Random.Range(-1, 1);
-		nextPos.y += Random.Range(minAxisDistance, maxAxisDistance) * Random.Range(-1, 1);
-		nextPos.z += Random.Range(minAxisDistance, maxAxisDistance) * Random.Range(-1, 1);
-		
-		nextTarget.position = nextPos;
+	void FixedUpdate() {
+		rigidbody.velocity = direction.normalized * baseSpeed;
+	}
+
+	void OnTriggerEnter(Collider other) {
+	}
+
+	private void RandomizeDirection() {
+		Vector3 randomAxis = new Vector3(Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f));
+
+		Quaternion rotationQuat = Quaternion.AngleAxis(turnAngle, randomAxis);
+		this.direction = rotationQuat * this.direction;
 	}
 }

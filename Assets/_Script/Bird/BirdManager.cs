@@ -5,6 +5,7 @@ public class BirdManager : MonoBehaviour {
 
 	protected BirdMovement movement;
 	protected BirdInput input;
+	protected Energy energy;
 
 	protected int score;
 
@@ -17,6 +18,7 @@ public class BirdManager : MonoBehaviour {
 	void Start () {
 		input = GetComponent<BirdInput>();
 		movement = GetComponent<BirdMovement>();
+		energy = GetComponent<Energy>();
 		score = 0;
 	}
 	
@@ -34,8 +36,12 @@ public class BirdManager : MonoBehaviour {
 		movement.Move(moveInput);
 	}
 
-	public void Charge() {
+	public void Dash(float dashInput) {
+		movement.Dash(dashInput);
+	}
 
+	public void ReplenishEnergy(float amount) {
+		this.energy.Replenish(amount);
 	}
 
 

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class BeakSensor : MonoBehaviour {
@@ -17,6 +17,11 @@ public class BeakSensor : MonoBehaviour {
 	void OnTriggerEnter(Collider other) {
 		if (other.gameObject.CompareTag("Bug")) { // check if sensor hits bug
 			manager.Score++;
+
+			BugProperties bugProps = other.gameObject.GetComponent<BugProperties>();
+			if (bugProps != null) {
+				manager.ReplenishEnergy(bugProps.energyValue);
+			}
 		}
 	}
 }
