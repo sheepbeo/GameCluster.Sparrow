@@ -51,5 +51,13 @@ public class BirdManager : MonoBehaviour {
 		this.energy.ReplenishThirst(amount);
 	}
 
+	public void CaughtInTrap() {
+		movement.IsCaughtInTrap = true;
+	}
+
+	public void ReleaseFromTrap() {
+		movement.IsCaughtInTrap = false;
+	}
+
 
 }

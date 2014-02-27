@@ -3,7 +3,7 @@ using System.Collections;
 using System;
 
 public class BirdMovement : MonoBehaviour {
-	
+
 	// Move-view variables
 	public float sensitivityX = 5f;
 	public float sensitivityY = 5f;
@@ -14,18 +14,32 @@ public class BirdMovement : MonoBehaviour {
 	private float rotationY = 0.0f;
 	
 	// Move variables
-	public float normalSpeed = 5.0f;
-	public float dashSpeed = 50.0f;
+	public float normalSpeed = 15.0f;
+	public float ActiveDashSpeedFactor = 5.0f;
+	public float ActiveTrapSpeedFactor = 0.02f;
+
+	private float dashSpeedFactor = 1f;
+	private float trapSpeedFactor = 1f;
 
 	// Private variables
 	private bool isMoving;
 	private bool isDashing;
+	private bool isCaughtInTrap = false;
 	private float speed;
 	private BirdTrail[] emitters;
 
 	public bool IsDashing {
 		get {
 			return isDashing;
+		}
+	}
+
+	public bool IsCaughtInTrap {
+		get {
+			return isCaughtInTrap;
+		}
+		set {
+			isCaughtInTrap = value;
 		}
 	}
 
@@ -36,7 +50,7 @@ public class BirdMovement : MonoBehaviour {
 	}
 	
 	void Update() {
-		updateBirdAnimation();
+		updateBirdAnimationAndSpeedFactors();
 	}
 	
 	public void MoveView(float verInput, float horInput) {
@@ -48,7 +62,8 @@ public class BirdMovement : MonoBehaviour {
 	}
 	
 	public void Move(float moveInput) {
-		rigidbody.velocity = speed * moveInput * transform.TransformDirection(Vector3.forward);
+		rigidbody.velocity = speed * moveInput * transform.TransformDirection(Vector3.forward)
+			* dashSpeedFactor * trapSpeedFactor;
 		if (moveInput != 0) {
 			isMoving = true;
 		} else {
@@ -64,7 +79,7 @@ public class BirdMovement : MonoBehaviour {
 		}
 	}
 	
-	private void updateBirdAnimation() {
+	private void updateBirdAnimationAndSpeedFactors() {
 		//stopRenderTrail();
 		if (!isMoving) {
 			flap();
@@ -75,11 +90,17 @@ public class BirdMovement : MonoBehaviour {
 		}
 
 		if (isDashing) {
-			this.speed = dashSpeed;
+			this.dashSpeedFactor = ActiveDashSpeedFactor;
 			setDashEffect(true);
 		} else {
-			this.speed = normalSpeed;
+			this.dashSpeedFactor = 1.0f;
 			setDashEffect(false);
+		}
+
+		if (isCaughtInTrap) {
+			this.trapSpeedFactor = ActiveTrapSpeedFactor;
+		} else {
+			this.trapSpeedFactor = 1.0f;
 		}
 	}
 	
