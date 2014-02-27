@@ -4,7 +4,8 @@ using System.Collections;
 public class BugProperties : MonoBehaviour {
 
 	// Bug properties:
-	public float energyValue;
+	public float hungerValue;
+	public float thirstValue;
 
 	// Use this for initialization
 	void Start () {

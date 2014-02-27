@@ -10,6 +10,8 @@ public class TreeManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		Transform treeColliderContainer = (new GameObject("TreeCollidersContainer")).transform;
+
 		treePrototypes = terrain.terrainData.treePrototypes;
 		treeInstances = terrain.terrainData.treeInstances;
 
@@ -22,15 +24,11 @@ public class TreeManager : MonoBehaviour {
 					colliderPos.z *= terrain.terrainData.size.z;
 					colliderPos += terrain.transform.position;
 
-					Instantiate(colliPrefb, colliderPos, Quaternion.identity);
+					GameObject treeCollider = Instantiate(colliPrefb, colliderPos, Quaternion.identity) as GameObject;
+					treeCollider.transform.parent = treeColliderContainer;
 				}
 			}
 		}
-
-	}
-	
-	// Update is called once per frame
-	void Update () {
 
 	}
 }

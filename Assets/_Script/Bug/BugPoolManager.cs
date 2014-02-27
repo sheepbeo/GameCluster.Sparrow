@@ -42,8 +42,8 @@ public class BugPoolManager : MonoBehaviour, IPool {
 		Vector3 nextPos = this.transform.position;
 
 		nextPos.x += Random.Range(-rangeX, rangeX);
-		nextPos.y += Random.Range(-rangeX, rangeX);
-		nextPos.z += Random.Range(-rangeX, rangeX);
+		nextPos.y += Random.Range(-rangeY, rangeY);
+		nextPos.z += Random.Range(-rangeZ, rangeZ);
 
 		wastedTransform.position = nextPos;
 	}

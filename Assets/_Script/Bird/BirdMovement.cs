@@ -23,6 +23,12 @@ public class BirdMovement : MonoBehaviour {
 	private float speed;
 	private BirdTrail[] emitters;
 
+	public bool IsDashing {
+		get {
+			return isDashing;
+		}
+	}
+
 	// Use this for initialization
 	void Start () {
 		this.speed = normalSpeed;

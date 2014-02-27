@@ -20,7 +20,8 @@ public class BeakSensor : MonoBehaviour {
 
 			BugProperties bugProps = other.gameObject.GetComponent<BugProperties>();
 			if (bugProps != null) {
-				manager.ReplenishEnergy(bugProps.energyValue);
+				manager.ReplenishHunger(bugProps.hungerValue);
+				manager.ReplenishThirst(bugProps.thirstValue);
 			}
 		}
 	}

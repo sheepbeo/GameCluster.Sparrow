@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(BirdManager))]
 public class BirdInput : MonoBehaviour {
 	protected BirdManager manager;
 	
@@ -23,8 +24,12 @@ public class BirdInput : MonoBehaviour {
 		dashInput = (Input.GetKey(KeyCode.Space)) ? 1.0f : 0.0f;
 		
 		// handle input:
-		manager.MoveView(verInput,horInput);
-		manager.Move(moveInput);
-		manager.Dash(dashInput);
+		if (manager != null) {
+			manager.MoveView(verInput,horInput);
+			manager.Move(moveInput);
+			manager.Dash(dashInput);
+		} else {
+			Debug.Log("null BirdManager Instance!");
+		}
 	}
 }

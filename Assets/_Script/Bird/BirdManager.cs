@@ -1,6 +1,9 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(BirdMovement))]
+[RequireComponent(typeof(BirdInput))]
+[RequireComponent(typeof(Energy))]
 public class BirdManager : MonoBehaviour {
 
 	protected BirdMovement movement;
@@ -40,8 +43,12 @@ public class BirdManager : MonoBehaviour {
 		movement.Dash(dashInput);
 	}
 
-	public void ReplenishEnergy(float amount) {
-		this.energy.Replenish(amount);
+	public void ReplenishHunger(float amount) {
+		this.energy.ReplenishHunger(amount);
+	}
+
+	public void ReplenishThirst(float amount) {
+		this.energy.ReplenishThirst(amount);
 	}
 
 
