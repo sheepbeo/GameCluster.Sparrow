@@ -3,6 +3,7 @@ using System.Collections;
 
 public class CameraPauseGUI : MonoBehaviour {
 
+	public Texture gameLogo;
 	public GUIStyle buttonStyle;
 
 	private GameManager gameManger;
@@ -17,6 +18,6 @@ public class CameraPauseGUI : MonoBehaviour {
 			gameManger.SwitchStatePause();
 		}
 
-
+		GUI.DrawTexture(new Rect(Screen.width / 2 -300, Screen.height / 2 - 200, 600,150), gameLogo);
 	}
 }
