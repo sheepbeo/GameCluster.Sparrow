@@ -1,43 +1,63 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(CameraFollowTarget))]
+[RequireComponent(typeof(CameraRotateAroundTarget))]
+[RequireComponent(typeof(CameraPauseGUI))]
+[RequireComponent(typeof(CameraGameOverGUI))]
+[RequireComponent(typeof(CameraDeadEffect))]
+
 public class CameraManager : MonoBehaviour {
-	private GameManager gameManger;
+	private CameraFollowTarget followTarget;
+	private CameraRotateAroundTarget rotateAroundTarget;
+	private CameraPauseGUI pauseGUI;
+	private CameraGameOverGUI gameoverGUI;
+	private CameraDeadEffect deadEffect;
+
 
 	void Awake() {
-		gameManger = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
-		gameManger.GameRunning += GameRunningEventHandler;
-		gameManger.GamePaused += GamePausedEventHandler;
+		GameManager.GameRunning += gameRunningEventHandler;
+		GameManager.GamePaused += gamePausedEventHandler;
+		GameManager.GameLose += gameLoseEventHandler;
+
+		this.followTarget = this.GetComponent<CameraFollowTarget>();
+		this.rotateAroundTarget = this.GetComponent<CameraRotateAroundTarget>();
+		this.pauseGUI = this.GetComponent<CameraPauseGUI>();
+		this.gameoverGUI = this.GetComponent<CameraGameOverGUI>();
+		this.deadEffect = this.GetComponent<CameraDeadEffect>();
 	}
 
-	// Use this for initialization
-	void Start () {
+	void Update() {
 
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		switch(gameManger.State) {
-		case GameState.RUNNING:
 
-			break;
-		case GameState.PAUSED:
+	private void gameRunningEventHandler() {
+		disableAll();
 
-			break;
-		}
+		followTarget.enabled = true;
 	}
 
-	private void GameRunningEventHandler() {
-		this.GetComponent<CameraFollowTarget>().enabled = true;
-		this.GetComponent<CameraRotateAroundTarget>().enabled = false;
-		this.GetComponent<CameraRotateAroundTarget>().OnDisable();
-		this.GetComponent<CameraPauseGUI>().enabled = false;
+	private void gamePausedEventHandler() {
+		disableAll();
+
+		rotateAroundTarget.enabled = true;
+		rotateAroundTarget.OnEnable();
+		pauseGUI.enabled = true;
 	}
 
-	private void GamePausedEventHandler() {
-		this.GetComponent<CameraFollowTarget>().enabled = false;
-		this.GetComponent<CameraRotateAroundTarget>().enabled = true;
-		this.GetComponent<CameraRotateAroundTarget>().OnEnable();
-		this.GetComponent<CameraPauseGUI>().enabled = true;
+	private void gameLoseEventHandler() {
+		disableAll();
+
+		gameoverGUI.enabled = true;
+		deadEffect.enabled = true;
+	}
+
+	private void disableAll() {
+		followTarget.enabled = false;
+		rotateAroundTarget.enabled = false;
+		rotateAroundTarget.OnDisable();
+		pauseGUI.enabled = false;
+		deadEffect.enabled = false;
+		gameoverGUI.enabled = false;
 	}
 }

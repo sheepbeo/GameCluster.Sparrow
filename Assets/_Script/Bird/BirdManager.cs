@@ -4,14 +4,20 @@ using System.Collections;
 [RequireComponent(typeof(BirdMovement))]
 [RequireComponent(typeof(BirdInput))]
 [RequireComponent(typeof(Energy))]
+[RequireComponent(typeof(BirdOutOfEnergyEffect))]
+[RequireComponent(typeof(BirdScoreGUI))]
 public class BirdManager : MonoBehaviour {
-
 	protected BirdMovement movement;
 	protected BirdInput input;
 	protected Energy energy;
+	protected BirdOutOfEnergyEffect deadEffect;
+	protected BirdScoreGUI scoreGUI;
+
+	protected Vector3 startingPosition;
+	protected Quaternion startingRotation;
 
 	protected int score;
-
+	
 	public int Score {
 		get { return score; } 
 		set { score = value; }
@@ -22,7 +28,13 @@ public class BirdManager : MonoBehaviour {
 		input = GetComponent<BirdInput>();
 		movement = GetComponent<BirdMovement>();
 		energy = GetComponent<Energy>();
+		scoreGUI = GetComponent<BirdScoreGUI>();
+
+		this.startingPosition = transform.position;
+		this.startingRotation = transform.rotation;
+
 		score = 0;
+		registerEventHandlers();
 	}
 	
 	// Update is called once per frame
@@ -30,17 +42,28 @@ public class BirdManager : MonoBehaviour {
 		input.CheckAndProcessInput();
 	}
 
+	private void registerEventHandlers() {
+		GameManager.GameRunning += gameRunningEventHandler;
+		GameManager.GameLose += gameLoseEventHandler;
+		GameManager.GameReset += gameResetEventHandler;
+	}
+
+	#region public methods to be called in other classes
+
 	public void MoveView(float verInput, float horInput)
 	{
-		movement.MoveView(verInput, horInput);
+		if (this.movement.enabled)
+			movement.MoveView(verInput, horInput);
 	}
 
 	public void Move(float moveInput) {
-		movement.Move(moveInput);
+		if (this.movement.enabled)
+			movement.Move(moveInput);
 	}
 
 	public void Dash(float dashInput) {
-		movement.Dash(dashInput);
+		if (this.movement.enabled)
+			movement.Dash(dashInput);
 	}
 
 	public void ReplenishHunger(float amount) {
@@ -59,5 +82,24 @@ public class BirdManager : MonoBehaviour {
 		movement.IsCaughtInTrap = false;
 	}
 
+	#endregion
 
+	#region Event Handler:
+
+	private void gameRunningEventHandler() {
+		this.movement.enabled = true;
+	}
+
+	private void gameLoseEventHandler() {
+		this.movement.Fall();
+		this.movement.enabled = false;
+	}
+
+	private void gameResetEventHandler() {
+		transform.position = startingPosition;
+		transform.rotation = startingRotation;
+		energy.Reset();
+	}
+
+	#endregion
 }

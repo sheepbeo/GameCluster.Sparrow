@@ -2,6 +2,7 @@
 using System.Collections;
 
 public class Energy : MonoBehaviour {
+
 	// Hunger variables
 	public float startingHunger;
 	public float warningHungerLevel;
@@ -28,10 +29,27 @@ public class Energy : MonoBehaviour {
 	// Decrease Rate:
 	public float decreaseRateNormal = 1.0f;  // per second
 	public float decreaseRateDashing = 5.0f;  // per second
+	public float poisonedFactor = 3.0f;
+
+	private bool isPoisoned = false;
 	private float decreaseRate;    // per second
+
 	
 	private float hunger;
 	private float thirst;
+
+	private bool isDead = false;
+
+	// register Event handlers
+	void Awake() {
+		BirdPoisonSensor birdPoisonSensor = GetComponent<BirdPoisonSensor>();
+		if (birdPoisonSensor) {
+			birdPoisonSensor.BirdStartPoisoned += BirdStartPoisonedEventHandler;
+			birdPoisonSensor.BirdStopPoisoned += BirdStopPoisonedEventHandler;
+		}
+
+		GameManager.GameReset += GameResetEventHandler;
+	}
 
 	// Use this for initialization
 	void Start () {
@@ -56,9 +74,16 @@ public class Energy : MonoBehaviour {
 		ReplenishThirst(-decreaseRate * Time.deltaTime);
 		this.innerHungerTextureLength = maxInnerHungerTextureLength * this.hunger / startingHunger;
 		this.innerThirstTextureLength = maxInnerThirstTextureLength * this.thirst / startingThirst;
+
+		if (IsOneEmpty() && !isDead) {
+			GameManager.SetStateTriggerEvent(GameState.LOSE);
+			isDead = true;
+		}
 	}
 
 	void OnGUI() {
+		setGUIDepth();
+
 		GUI.DrawTexture(new Rect(10,10,256,32), baseHungerTexture);
 		GUI.DrawTexture(new Rect(12,12,innerHungerTextureLength,28), innerHungerTexture);
 
@@ -66,11 +91,19 @@ public class Energy : MonoBehaviour {
 		GUI.DrawTexture(new Rect(12,47,innerThirstTextureLength,28), innerThirstTexture);
 	}
 
+	protected void setGUIDepth() {
+		GUI.depth = GUIDepths.ENERGY_BARS_LAYER;
+	}
+
 	private void checkDecreaseRate() {
 		if (movement != null && movement.IsDashing) {
 			this.decreaseRate = decreaseRateDashing;
 		} else {
 			this.decreaseRate = decreaseRateNormal;
+		}
+
+		if (this.isPoisoned) {
+			this.decreaseRate *= poisonedFactor;
 		}
 	}
 
@@ -81,4 +114,26 @@ public class Energy : MonoBehaviour {
 	public void ReplenishThirst(float amount) {
 		this.thirst = Mathf.Clamp(this.thirst + amount, 0, this.startingThirst);
 	}
+
+	public bool IsOneEmpty() {
+		return (this.hunger <= 0 || this.thirst <=0);
+	}
+
+	public void Reset() {
+		this.hunger = startingHunger;
+		this.thirst = startingThirst;
+	}
+
+	public void BirdStartPoisonedEventHandler() {
+		this.isPoisoned = true;
+	}
+
+	public void BirdStopPoisonedEventHandler() {
+		this.isPoisoned = false;
+	}
+
+	private void GameResetEventHandler() {
+		this.isDead = false;
+	}
 }
+

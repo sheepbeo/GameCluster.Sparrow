@@ -31,5 +31,7 @@ public class BirdInput : MonoBehaviour {
 		} else {
 			Debug.Log("null BirdManager Instance!");
 		}
+
+
 	}
 }

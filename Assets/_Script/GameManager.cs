@@ -4,43 +4,57 @@ using System.Collections;
 public class GameManager : MonoBehaviour {
 	// Game events:
 	public delegate void GameEvent();
-	public event GameEvent GamePaused, GameRunning;
+	public static event GameEvent GameReset = delegate() {}, 
+		GamePaused = delegate() {}, 
+		GameRunning = delegate() {}, 
+		GameWin = delegate() {}, 
+		GameLose = delegate() {},
+		GameEnd = delegate() {};
 
-	public GameState State { get { return state; }}
 	public Transform runningGameObjectsWrapper;
-
-	protected BirdManager birdManager;
-	protected GameState state;
+	
+	protected static GameState state;
 
 	// Use this for initialization
 	void Start () {
-		birdManager = runningGameObjectsWrapper.GetComponentInChildren<BirdManager>();
-		this.state = GameState.RUNNING;
-		SwitchStatePause();
+		this.SetStateTriggerEvent(GameState.RESET);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown(KeyCode.P)) {
-			SwitchStatePause();
+		// check pause input:
+		if (Input.GetKey(KeyCode.P)) {
+			SetStateTriggerEvent(GameState.PAUSED);
 		}
+
+
 	}
 
-	// TODO put this in GUI Manager
-	void OnGUI() {
-		GUI.Label(new Rect(16,15,100,100), "Score: " + birdManager.Score);
-	}
+	public static void SetStateTriggerEvent(GameState newState) {
+		if (state != newState) {
+			state = newState;
 
-	public void SwitchStatePause() {
-		if (this.state == GameState.PAUSED) {
-			this.state = GameState.RUNNING;
-			this.runningGameObjectsWrapper.gameObject.SetActive(true);
-			GameRunning();
-		}
-		else if (this.state == GameState.RUNNING) {
-			this.state = GameState.PAUSED;
-			this.runningGameObjectsWrapper.gameObject.SetActive(false);
-			GamePaused();
+			if (newState == GameState.RESET) {
+				GameReset();
+				SetStateTriggerEvent(GameState.PAUSED);
+			}
+			if (newState == GameState.PAUSED) {
+				GamePaused();
+			} 
+			if (newState == GameState.RUNNING) {
+				GameRunning();
+			}
+			if (newState == GameState.WIN) {
+				GameWin();
+				SetStateTriggerEvent(GameState.END);
+			}
+			if (newState == GameState.LOSE) {
+				GameLose();
+				SetStateTriggerEvent(GameState.END);
+			}
+			if (newState == GameState.END) {
+				GameEnd();
+			}
 		}
 	}
 }

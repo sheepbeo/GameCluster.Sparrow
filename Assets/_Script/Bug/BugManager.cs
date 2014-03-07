@@ -6,7 +6,11 @@ public class BugManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		poolManager = GameObject.FindGameObjectWithTag("BugPool").GetComponent<BugPoolManager>();
+		poolManager = transform.root.GetComponentInChildren<BugPoolManager>();
+
+		if (poolManager == null) {
+			poolManager = GameObject.FindGameObjectWithTag("BugPool").GetComponent<BugPoolManager>();
+		}
 	}
 	
 	// Update is called once per frame

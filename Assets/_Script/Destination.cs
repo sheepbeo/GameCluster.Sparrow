@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Destination : MonoBehaviour {
 	public Transform birdTransform;
+	public GUIStyle destinationTextStyle;
 
 	private bool isDestinationReached = false;
 	private BirdManager birdManager;
@@ -25,8 +26,8 @@ public class Destination : MonoBehaviour {
 
 	void OnGUI() {
 		if (isDestinationReached) {
-			GUI.Label(new Rect(100,80,100,100), "You Win!");
-			GUI.Label(new Rect(100,100,100,100), "Score: " + birdManager.Score);
+			GUI.Label(new Rect(Screen.width/2 - 150,80,300,200), "You Win!" , destinationTextStyle);
+			GUI.Label(new Rect(Screen.width/2 - 150,200,300,200), "Score: " + birdManager.Score, destinationTextStyle);
 		}
 	}
 }

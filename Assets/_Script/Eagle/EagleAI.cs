@@ -8,11 +8,23 @@ public class EagleAI : MonoBehaviour {
 	private bool isPatrolling;
 	private int nextWayPointIndex;
 
+	private Vector3 originPosition;
+	private Quaternion originRotation;
+
+	private bool caughtBird = false;
+
+	void Awake() {
+		GameManager.GameReset += gameResetEventHandler;
+	}
+
 	// Use this for initialization
 	void Start () {
 		this.movement = GetComponent<EagleMovement>();
 		this.isPatrolling = true;
 		this.nextWayPointIndex = 0;
+
+		this.originPosition = transform.position;
+		this.originRotation = transform.rotation;
 	}
 	
 	// Update is called once per frame
@@ -26,17 +38,31 @@ public class EagleAI : MonoBehaviour {
 	}
 
 	public void OnBirdSpottedInHuntArea(Collider other) {
-		this.isPatrolling = false;
-		this.movement.Destination = other.transform.position;
+		if (!caughtBird) {
+			this.isPatrolling = false;
+			this.movement.Destination = other.transform.position;
+		}
 	}
 
 	public void OnBirdLeftHuntArea(Collider other) {
 		this.isPatrolling = true;
-		this.movement.Destination = wayPoints[nextWayPointIndex].position;
+	}
+
+	public void OnBirdCaught() {
+		this.isPatrolling = true;
+		this.caughtBird = true;
 	}
 
 	private void incrementNextWayPointIndex() {
 		nextWayPointIndex = (nextWayPointIndex+1) % wayPoints.Length;
-		print("hello");
+	}
+
+	private void gameResetEventHandler() {
+		transform.localPosition = originPosition;
+		transform.rotation = originRotation;
+
+		this.isPatrolling = true;
+		this.caughtBird = false;
+		this.nextWayPointIndex = 0;
 	}
 }
