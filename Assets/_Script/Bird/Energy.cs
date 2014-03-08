@@ -34,6 +34,9 @@ public class Energy : MonoBehaviour {
 	private bool isPoisoned = false;
 	private float decreaseRate;    // per second
 
+	// Bug icons
+	public Texture hungerBugIcon;
+	public Texture thirstBugIcon;
 	
 	private float hunger;
 	private float thirst;
@@ -53,10 +56,12 @@ public class Energy : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		// initialize hunger bar:
 		this.hunger = startingHunger;
 		maxInnerHungerTextureLength = 252;
 		innerHungerTextureLength = maxInnerHungerTextureLength;
 
+		// initialize thirst bar:
 		this.thirst = startingThirst;
 		maxInnerThirstTextureLength = 252;
 		innerThirstTextureLength = maxInnerThirstTextureLength;
@@ -84,11 +89,15 @@ public class Energy : MonoBehaviour {
 	void OnGUI() {
 		setGUIDepth();
 
-		GUI.DrawTexture(new Rect(10,10,256,32), baseHungerTexture);
-		GUI.DrawTexture(new Rect(12,12,innerHungerTextureLength,28), innerHungerTexture);
+		// Draw bug icons:
+		GUI.DrawTexture(new Rect(10,10,32,32), hungerBugIcon);
+		GUI.DrawTexture(new Rect(10,45,32,32), thirstBugIcon);
 
-		GUI.DrawTexture(new Rect(10,45,256,32), baseThirstTexture);
-		GUI.DrawTexture(new Rect(12,47,innerThirstTextureLength,28), innerThirstTexture);
+		// Draw bars:
+		GUI.DrawTexture(new Rect(52,10,256,32), baseHungerTexture);
+		GUI.DrawTexture(new Rect(54,12,innerHungerTextureLength,28), innerHungerTexture);
+		GUI.DrawTexture(new Rect(52,45,256,32), baseThirstTexture);
+		GUI.DrawTexture(new Rect(54,47,innerThirstTextureLength,28), innerThirstTexture);
 	}
 
 	protected void setGUIDepth() {

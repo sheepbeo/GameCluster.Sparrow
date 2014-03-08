@@ -8,7 +8,7 @@ public class EagleAI : MonoBehaviour {
 	private bool isPatrolling;
 	private int nextWayPointIndex;
 
-	private Vector3 originPosition;
+	private Vector3 originLocalPosition;
 	private Quaternion originRotation;
 
 	private bool caughtBird = false;
@@ -23,7 +23,7 @@ public class EagleAI : MonoBehaviour {
 		this.isPatrolling = true;
 		this.nextWayPointIndex = 0;
 
-		this.originPosition = transform.position;
+		this.originLocalPosition = transform.localPosition;
 		this.originRotation = transform.rotation;
 	}
 	
@@ -58,7 +58,7 @@ public class EagleAI : MonoBehaviour {
 	}
 
 	private void gameResetEventHandler() {
-		transform.localPosition = originPosition;
+		transform.localPosition = originLocalPosition;
 		transform.rotation = originRotation;
 
 		this.isPatrolling = true;

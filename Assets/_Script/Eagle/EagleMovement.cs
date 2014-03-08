@@ -18,8 +18,6 @@ public class EagleMovement : MonoBehaviour {
 	private Vector3 destination;
 	private Vector3 nextPos;
 
-	public Vector3 test;
-
 	// Use this for initialization
 	void Start () {
 		this.destination = this.transform.position;
@@ -36,8 +34,6 @@ public class EagleMovement : MonoBehaviour {
 		} else {
 			this.rigidbody.velocity = this.speed * (destination - this.transform.position).normalized;
 		}
-
-		test = (destination - this.transform.position);
 	}
 
 	public bool ReachedDestination() {
