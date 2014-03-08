@@ -13,12 +13,12 @@ SubShader {
 	
 	Alphatest Less 0.9
 	ZWrite On
-	Blend DstColor OneMinusDstColor
+	Blend SrcAlpha OneMinusSrcAlpha 
 	ColorMask RGB
 		
 	// Non-lightmapped
 	Pass {
-		Tags { "LightMode" = "Vertex"  }
+		Tags { "LightMode" = "Vertex" }
 		Material {
 			Diffuse [_Color]
 			Ambient [_Color]
@@ -28,9 +28,28 @@ SubShader {
 		}
 		Lighting On
 		SeparateSpecular On
-		
+		SetTexture [_MainTex] {
+			Combine texture * primary DOUBLE, texture * primary
+		} 
 	}
 	
-	
+	// Lightmapped
+	Pass {
+		Tags { "LightMode" = "VertexLM" }
+		BindChannels {
+			Bind "Vertex", vertex
+			Bind "normal", normal
+			Bind "texcoord1", texcoord0 // lightmap uses 2nd uv
+			Bind "texcoord", texcoord1 // main uses 1st uv
+		}
+		SetTexture [unity_Lightmap] {
+			matrix [unity_LightmapMatrix]
+			constantColor [_Color]
+			combine texture * constant
+		}
+		SetTexture [_MainTex] {
+			combine texture * previous DOUBLE, texture * primary
+		}
+	}
 }
 }
