@@ -1,7 +1,7 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
-public class EagleMovement : MonoBehaviour {
+public class VelocityChangingTargetedMovement : MonoBehaviour {
 
 
 	public Vector3 Destination {
@@ -15,17 +15,18 @@ public class EagleMovement : MonoBehaviour {
 
 	public float speed = 15f;
 	public float proximityDistance = 0.5f;
-	private Vector3 destination;
-	private Vector3 nextPos;
+
+	private Vector3 destination = Vector3.zero;
 
 	// Use this for initialization
 	void Start () {
-		this.destination = this.transform.position;
+		if (this.destination == Vector3.zero) {
+			this.destination = this.transform.position;
+		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
-
 	}
 
 	void FixedUpdate() {
